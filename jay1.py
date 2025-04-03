@@ -4,7 +4,7 @@ import qrcode as qr
 img= qr.make("https://www.youtube.com/watch?v=btGd40yV47A")
 img.save("jay_kumar_singh_QR.png")
 
-# user can decide
+# user can decide how to make qrcode
 
 
 import qrcode  
