@@ -6,6 +6,8 @@ from instabot import Bot
 bot=Bot()
 bot.login(username="your username",passwords="your passwords")
 bot.follow('virat.kohli')
+
+# upload photo
 bot.upload_photo("C:/Users/Dell/OneDrive/Pictures/jay.jpg",caption="wow___")
 
 # if you want to unfollow any person then: 
