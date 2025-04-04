@@ -3,6 +3,7 @@
 # pip install instabot
 
 from instabot import Bot
+# first login our page
 bot=Bot()
 bot.login(username="your username",passwords="your passwords")
 # if you follow anyone
