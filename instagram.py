@@ -5,6 +5,7 @@
 from instabot import Bot
 bot=Bot()
 bot.login(username="your username",passwords="your passwords")
+# if you follow anyone
 bot.follow('virat.kohli')
 
 # upload photo
