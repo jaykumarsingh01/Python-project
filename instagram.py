@@ -21,7 +21,7 @@ followers =bot.get_user_followers("your user id")
 for followers in followers:
     print(bot.get_user_info(follower))
 
-
+# following
 following=bot.get_user_following("your user id")
 for Following in following:
     print(bot.get_user_info(Following))
