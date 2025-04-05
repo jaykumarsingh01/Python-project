@@ -1,3 +1,5 @@
+# this is a voice assistant program using python
+
 import pyttsx3 # type: ignore
 import speech_recognition as sr # type: ignore
 import webbrowser
