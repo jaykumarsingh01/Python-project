@@ -14,6 +14,7 @@ def sptext():
             print("recognizing....")
             data = recognizer.recognize_sphinx(audio)
             print(data)
+            return data
         except sr.UnknownValueError:
             print("not understanding")
 
@@ -33,4 +34,23 @@ def speechtx(x):
 
 # speechtx("hello Jay Kumar Singh and sonal singh son of vijay kumar singh and brother of varoon singh")
 
+if __name__ == '__main__':
 
+#    if sptext().lower() == " hey sonal ":
+        data1= sptext().lower()
+        if "your name" in data1:
+             name= "my name is sonal singh"
+             speechtx(name)
+        elif "how old are you" in data1:
+             age ="i am 100 years old"
+             speechtx(age)
+        elif 'now time' in data1:
+             time= datetime.datetime.now().strftime("%I%M%p")
+             speechtx(time)
+#    else:
+#            print("thanks")
+
+
+
+
+    
