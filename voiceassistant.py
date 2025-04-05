@@ -17,4 +17,20 @@ def sptext():
         except sr.UnknownValueError:
             print("not understanding")
 
-sptext()
+
+def speechtx(x):
+    engine = pyttsx3.init()
+    voices = engine.getProperty('voices')
+    engine.setProperty('voice',voices[0].id)
+
+    # if you want female voice then change index 0 to 1 :
+
+    # engine.setProperty('voice',voices[1].id)    
+    rate = engine.getProperty('rate')
+    engine.setProperty('rate',150)
+    engine.say(x)
+    engine.runAndWait()
+
+# speechtx("hello Jay Kumar Singh and sonal singh son of vijay kumar singh and brother of varoon singh")
+
+
