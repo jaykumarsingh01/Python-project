@@ -36,3 +36,4 @@ with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
 
 print("Mail Sent Successfully!")
 
+# ob.quit()
