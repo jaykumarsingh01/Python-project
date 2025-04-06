@@ -34,5 +34,5 @@ with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
     smtp.login('jaykumarsingh8117@gmail.com', 'orpo kyjj txqz fmxo')
     smtp.send_message(msg)
 
-
+print("PDF Sent Successfully!")
 
