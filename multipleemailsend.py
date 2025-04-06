@@ -1,3 +1,4 @@
+# you can send multiple email using python 
 import smtplib
 from email.message import EmailMessage
 
