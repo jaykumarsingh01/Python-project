@@ -32,7 +32,7 @@ with open(image_path, 'rb') as f:
 with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
     smtp.ehlo()
     smtp.starttls()
-    smtp.login('jaykumarsingh8117@gmail.com', 'orpo kyjj txqz fmxo')
+    smtp.login('jaykumarsingh8117@gmail.com', 'your_16_char_app_password')
     smtp.send_message(msg)
 
 print("Mail Sent Successfully!")
