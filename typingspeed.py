@@ -15,10 +15,15 @@ def mistake(partest,usertest):
         error = error + 1
   return error
          
+def speed_time (time_start, time_end, userinput):
+ time_delay = time_end-time_start
+ time_R =round(time_delay,2)
+ speed = len(userinput)/ time_R
+ return round(speed) 
        
 
  
-test =[
+ test =[
     "A paragraph is a series of sentences that are organized and coherent,"
 " and are all related to a single topic. "
 "Almost every piece of writing you do that is longer than a few sentences should be organized into paragraphs. "
@@ -35,4 +40,11 @@ print()
 print()
 time_1 =time()
 testinput=input("Enter: ")
+time_2 = time()
+
+
+print('Speed : ',speed_time (time_1, time_2, testinput), "w/sec")
+print('Error : ',  mistake(test1,testinput))
+
+
 
