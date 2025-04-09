@@ -20,3 +20,6 @@ qr_code.make(fit=True)
 
 img = qr_code.make_image(fill="black", back_color="white")  
 img.save("Sonal_kumar_singh_QR.png")  
+
+
+                                         #Jay Kumar Singh
