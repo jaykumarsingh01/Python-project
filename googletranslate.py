@@ -32,13 +32,13 @@ def data():
 root = Tk()
 root.title("Translator")
 root.geometry("500x700")
-root.configure(bg='navy blue')
+root.configure(bg='#FED2E2')
 
 # Heading
 Label(root, text="Translator", font=("times new roman", 40, "bold"), bg="white").place(x=100, y=20, height=60, width=300)
 
 # Source label
-Label(root, text="Source Text", font=("times new roman", 20, "bold"), fg="black", bg="navy blue").place(x=150, y=100, height=30, width=200)
+Label(root, text="Source Text", font=("times new roman", 20, "bold"), fg="black", bg="white").place(x=150, y=100, height=30, width=200)
 
 # Source Textbox
 Sor_txt = Text(root, font=("times new roman", 14), wrap=WORD)
@@ -58,7 +58,7 @@ comb_dest.place(x=330, y=310, height=40, width=150)
 comb_dest.set("Hindi")
 
 # Destination label
-Label(root, text="Dest Text", font=("times new roman", 20, "bold"), fg="black", bg="navy blue").place(x=150, y=370, height=30, width=200)
+Label(root, text="Dest Text", font=("times new roman", 20, "bold"), fg="black", bg="white").place(x=150, y=370, height=30, width=200)
 
 # Destination Textbox
 dest_txt = Text(root, font=("times new roman", 14), wrap=WORD)
