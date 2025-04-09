@@ -1,3 +1,6 @@
+# this is translator to one language to another
+
+
 import asyncio
 from tkinter import *
 from tkinter import ttk
