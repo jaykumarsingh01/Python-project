@@ -63,5 +63,3 @@ dest_txt.place(x=10, y=410, height=150, width=480)
 
 # Mainloop
 root.mainloop()
-
-                                          #Jay Kumar Singh 
