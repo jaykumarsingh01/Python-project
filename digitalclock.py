@@ -104,7 +104,7 @@ def get_greeting():
         return "Good Evening 🌙"
 
 
-#****************Time***********
+# Time*
 
 
 lab_hr=Label(clock,text="00",font=('Times New Roman',60,"bold"),
@@ -192,14 +192,14 @@ toggle_btn = Button(clock, text="12/24 Hour", command=toggle_format, font=('Aria
 toggle_btn.place(x=720, y=480, width=130, height=40)
 
 
-# ==== Exit Button ====
+#  Exit Button 
 exit_btn = Button(clock, text="Exit", command=clock.quit, font=('Arial', 14), bg='red', fg='white')
 exit_btn.place(x=870, y=480, width=100, height=40)
 
 
 
 
-# === Stopwatch ===
+#  Stopwatch 
 stopwatch_label = Label(clock, text="00:00:00", font=('Arial', 20, 'bold'), bg='Wheat', fg='blue')
 stopwatch_label.place(x=20, y=480)  # Moved up
 
