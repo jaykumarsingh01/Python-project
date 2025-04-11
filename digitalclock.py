@@ -36,3 +36,8 @@ lab_hr.place(x=40,y=40,height=110,width=100)
 
 
 clock.mainloop()
+
+
+
+
+                                                     #Jay Kumar Singh
