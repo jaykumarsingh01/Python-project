@@ -1,4 +1,11 @@
 from tkinter import *
+import datetime
+
+# print(datetime.datetime.now())
+
+def date_time():
+    time =datetime.datetime.now()
+    hr = time.strftime('%I')
 
 clock=Tk()
 clock.title('Digital Clock')
