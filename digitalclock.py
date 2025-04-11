@@ -72,11 +72,7 @@ lab_am_txt=Label(clock,text="Am/Pm",font=('Times New Roman',20,"bold"),
 lab_am_txt.place(x=780,y=190,height=40,width=100)
 
 
-
-
 # Date
-
-
 
 
 
@@ -115,33 +111,6 @@ lab_day.place(x=780,y=270,height=110,width=100)
 lab_day_txt=Label(clock,text="Day",font=('Times New Roman',20,"bold"),
              bg='black',fg="white")
 lab_day_txt.place(x=780,y=410,height=40,width=100)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 date_time()
