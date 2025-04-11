@@ -9,8 +9,25 @@ clock.config(bg='Wheat')
 lab_hr=Label(clock,text="00",font=('Times New Roman',60,"bold"),
              bg='black',fg="white")
 
-lab_hr.place(x=40,y=40,height=110,width=100)
+lab_hr.place(x=120,y=40,height=110,width=100)
 
+
+lab_min=Label(clock,text="00",font=('Times New Roman',60,"bold"),
+             bg='black',fg="white")
+
+lab_min.place(x=340,y=40,height=110,width=100)
+
+
+lab_sec=Label(clock,text="00",font=('Times New Roman',60,"bold"),
+             bg='black',fg="white")
+
+lab_sec.place(x=560,y=40,height=110,width=100)
+
+
+lab_am=Label(clock,text="00",font=('Times New Roman',60,"bold"),
+             bg='black',fg="white")
+
+lab_am.place(x=780,y=40,height=110,width=100)
 
 
 
