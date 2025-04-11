@@ -11,7 +11,7 @@ def date_time():
     am = time.strftime('%p ')
     date =time.strftime("%d")
     month =time.strftime("%m")
-    year =time.strftime("%y")
+    year =time.strftime("%Y")
     day =time.strftime("%a")
 
     lab_hr.config(text=hr)
@@ -29,8 +29,13 @@ def date_time():
 
 clock=Tk()
 clock.title('Digital Clock')
-clock.geometry('1000x500')
+clock.geometry('1000x530')
 clock.config(bg='Wheat')
+
+
+
+label_full_date = Label(clock, text="Digital Clock", font=('Helvetica', 20, "bold"), bg='Wheat', fg='red')
+label_full_date.pack(pady=10)
 
 
 #****************Time***********
@@ -95,13 +100,13 @@ lab_mon_txt=Label(clock,text="Month",font=('Times New Roman',20,"bold"),
 lab_mon_txt.place(x=340,y=410,height=40,width=100)
 
 
-lab_year=Label(clock,text="00",font=('Times New Roman',60,"bold"),
+lab_year=Label(clock,text="00",font=('Times New Roman',45,"bold"),
              bg='black',fg="white")
 
-lab_year.place(x=560,y=270,height=110,width=100)
-lab_year_txt=Label(clock,text="Year.",font=('Times New Roman',20,"bold"),
+lab_year.place(x=560,y=270,height=110,width=120)
+lab_year_txt=Label(clock,text="Year",font=('Times New Roman',20,"bold"),
              bg='black',fg="white")
-lab_year_txt.place(x=560,y=410,height=40,width=100)
+lab_year_txt.place(x=560,y=410,height=40,width=110)
 
 
 lab_day=Label(clock,text="00",font=('Times New Roman',50,"bold"),
@@ -113,10 +118,13 @@ lab_day_txt=Label(clock,text="Day",font=('Times New Roman',20,"bold"),
 lab_day_txt.place(x=780,y=410,height=40,width=100)
 
 
+
+# ==== Exit Button ====
+exit_btn = Button(clock, text="Exit", command=clock.quit, font=('Arial', 14), bg='black', fg='white')
+exit_btn.place(x=870, y=480, width=100, height=40)
+
+
 date_time()
-
-
-
 clock.mainloop()
 
 
