@@ -88,7 +88,22 @@ lab_mon_txt=Label(clock,text="Month",font=('Times New Roman',20,"bold"),
 lab_mon_txt.place(x=340,y=410,height=40,width=100)
 
 
+lab_year=Label(clock,text="00",font=('Times New Roman',60,"bold"),
+             bg='black',fg="white")
 
+lab_year.place(x=560,y=270,height=110,width=100)
+lab_year_txt=Label(clock,text="Year.",font=('Times New Roman',20,"bold"),
+             bg='black',fg="white")
+lab_year_txt.place(x=560,y=410,height=40,width=100)
+
+
+lab_day=Label(clock,text="00",font=('Times New Roman',60,"bold"),
+             bg='black',fg="white")
+
+lab_day.place(x=780,y=270,height=110,width=100)
+lab_day_txt=Label(clock,text="Day",font=('Times New Roman',20,"bold"),
+             bg='black',fg="white")
+lab_day_txt.place(x=780,y=410,height=40,width=100)
 
 
 
