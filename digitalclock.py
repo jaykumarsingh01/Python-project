@@ -9,10 +9,21 @@ def date_time():
     min = time.strftime('%M')
     sec = time.strftime('%S')
     am = time.strftime('%p ')
+    date =time.strftime("%d")
+    month =time.strftime("%m")
+    year =time.strftime("%y")
+    day =time.strftime("%a")
+
     lab_hr.config(text=hr)
     lab_min.config(text=min)
     lab_sec.config(text=sec)
     lab_am.config(text=am)
+    lab_date.config(text=date)
+    lab_mon.config(text=month)
+    lab_year.config(text=year)
+    lab_day.config(text=day)
+
+
     lab_hr.after(200,date_time)
 
 
@@ -97,7 +108,7 @@ lab_year_txt=Label(clock,text="Year.",font=('Times New Roman',20,"bold"),
 lab_year_txt.place(x=560,y=410,height=40,width=100)
 
 
-lab_day=Label(clock,text="00",font=('Times New Roman',60,"bold"),
+lab_day=Label(clock,text="00",font=('Times New Roman',50,"bold"),
              bg='black',fg="white")
 
 lab_day.place(x=780,y=270,height=110,width=100)
