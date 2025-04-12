@@ -399,20 +399,6 @@ remove_note_button.place(x=10, y=190)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #function call 
 get_weather()
 update_quote()
