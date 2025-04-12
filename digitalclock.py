@@ -595,6 +595,7 @@ voice_btn = Button(clock, text="🎤", command=recognize_voice_command, font=("A
 voice_btn.place(x=950, y=130, width=32, height=32)
 
 
+
 email_note_button = Button(clock, text="📨", command=send_email,font=("arial", 20),bg='wheat',bd=0 )
 email_note_button.place(x=950, y=168,width=32,height=32)
 
@@ -619,6 +620,8 @@ news_button.place(x=950, y=250)
 
 
 # update_city_time()
+
+
 #function call 
 update_background()
 get_weather()
