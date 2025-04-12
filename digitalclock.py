@@ -1,3 +1,5 @@
+# Digital clock
+
 from tkinter import *
 from tkinter import messagebox, simpledialog
 from tkinter.ttk import Combobox 
