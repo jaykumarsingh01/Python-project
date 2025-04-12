@@ -1,5 +1,5 @@
 from tkinter import *
-from tkinter import messagebox
+from tkinter import messagebox, simpledialog
 import datetime
 import time
 import threading
@@ -7,13 +7,20 @@ import random
 import calendar
 import pytz
 import requests
+import pyttsx3
+import json
+import os
+from tkinter import PhotoImage
 
 
 is_24_hour = False
 stopwatch_running = False
 stopwatch_counter = 0
 is_dark = False
-alarm_thread = None
+alarm_times = []
+preferences_file = "preferences.json"
+city = "Delhi"
+speech_engine = pyttsx3.init()
 
 # === Quote List ===
 quotes = [
@@ -21,7 +28,19 @@ quotes = [
     "Discipline is the bridge between goals and accomplishment.",
     "Success is no accident.",
     "Push yourself, because no one else is going to do it for you.",
-    "Great things never come from comfort zones."
+    "Great things never come from comfort zones.",
+    "Keep your face always toward the sunshine—and shadows will fall behind you",
+    "There is nothing either good or bad, but thinking makes it so.",
+    "All that we are is the result of what we have thought",
+    "Positive anything is better than negative nothing",
+    "The energy of the mind is the essence of life",
+    "Energy and persistence conquer all things.",
+    "Light tomorrow with today!",
+    "It does not matter how slowly you go as long as you do not stop.",
+    "Every day may not be good... but there's something good in every day.!",
+    "Happiness depends upon ourselves.",
+    "It is not length of life, but depth of life.”",
+    "The journey of a thousand miles begins with one step.”"
 ]
 
 # === Weather ===
@@ -29,7 +48,7 @@ quotes = [
 
 def get_weather():
     try:
-        api_key = "bd6f1dd81d2f2eb8414a656ec18c6ef5"  # You can generate a new one if needed
+        # api_key = "bd6f1dd81d2f2eb8414a656ec18c6ef5"  
         city = "Delhi"
         url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
         
@@ -57,6 +76,11 @@ def get_weather():
 def toggle_format():
     global is_24_hour
     is_24_hour = not is_24_hour
+
+def announce_time():
+    now = datetime.datetime.now().strftime("%I:%M %p")
+    speech_engine.say(f"The time is {now}")
+    speech_engine.runAndWait()
 
 def date_time():
         
@@ -123,20 +147,21 @@ def update_stopwatch():
         stopwatch_label.config(text=f"{hrs:02}:{mins:02}:{secs:02}")
         stopwatch_label.after(1000, update_stopwatch)
 
-
 # === Alarm ===
 def set_alarm():
-    alarm_time = simpledialog.askstring("Set Alarm", "Enter time in HH:MM format:") # type: ignore
+    alarm_time = simpledialog.askstring("Set Alarm", "Enter time in HH:MM format:")
     if alarm_time:
-        threading.Thread(target=check_alarm, args=(alarm_time,), daemon=True).start()
+        alarm_times.append(alarm_time)
+        threading.Thread(target=check_alarm, daemon=True).start()
+        messagebox.showinfo("Alarm Set", f"Alarm set for {alarm_time}")
 
-def check_alarm(alarm_time):
+def check_alarm():
     while True:
         now = datetime.datetime.now().strftime('%H:%M')
-        if now == alarm_time:
+        if now in alarm_times:
             messagebox.showinfo("Alarm", "⏰ Time's up!")
-            break
-        time.sleep(1)
+            alarm_times.remove(now)
+        time.sleep(30)
 
 # === World Clock ===
 def get_world_time(city):
@@ -146,13 +171,13 @@ def get_world_time(city):
 # === Quotes ===
 def update_quote():
     quote_label.config(text=random.choice(quotes))
-    clock.after(10000, update_quote)
+    clock.after(5000, update_quote)
 
 # === Calendar ===
 def show_calendar():
     now = datetime.datetime.now()
     cal_text = calendar.month(now.year, now.month)
-    messagebox.showinfo("📅 Calendar", cal_text)
+    messagebox.showinfo(f"📅 Calendar ({now.year})", cal_text)
 
 # === Theme Toggle ===
 def toggle_theme():
@@ -167,7 +192,30 @@ def toggle_theme():
             pass
     is_dark = not is_dark
 
+# === Countdown ===
+def countdown_timer():
+    t = simpledialog.askinteger("Countdown", "Enter seconds:")
+    if t:
+        def run():
+            for i in range(t, 0, -1):
+                countdown_display.config(text=f"Countdown: {i}s")
+                time.sleep(1)
+            countdown_display.config(text="")  # Clear after countdown
+            messagebox.showinfo("Countdown", "⌛ Time's up!")
+        threading.Thread(target=run, daemon=True).start()
 
+from tkinter import simpledialog
+
+def add_note():
+    task = simpledialog.askstring("Add Note", "Enter your note:")
+    if task:
+        notes_text.insert(END, f"- {task}\n")
+
+def remove_note():
+    try:
+        notes_text.delete("end-2l", "end-1l")  # Deletes the last line
+    except:
+        pass
 
 
 # UI setup
@@ -177,14 +225,19 @@ clock.geometry('1000x600')
 clock.config(bg='Wheat')
 
 
-
-
-
 # label_full_date = Label(clock, text="Digital Clock", font=('Helvetica', 20, "bold"), bg='Wheat', fg='red')
 # label_full_date.pack(pady=10)
 
+countdown_display = Label(clock, font=('Helvetica', 22, 'bold'), bg='Wheat', fg='red')
+# countdown_display.pack(pady=5)
+countdown_display.place(relx=0.5, y=60, anchor="center")  # Above greeting
+
+
+
 label_greeting = Label(clock, font=('Helvetica', 25, 'bold'), bg='Wheat', fg='green')
-label_greeting.pack()
+# label_greeting.pack()
+label_greeting.place(relx=0.5, y=20, anchor="center")  # Top center
+
 
 
 def get_greeting():
@@ -275,8 +328,6 @@ lab_day_txt=Label(clock,text="Day",font=('Times New Roman',20,"bold"),
              bg='black',fg="white")
 lab_day_txt.place(x=780,y=410,height=40,width=100)
 
-
-
 #labels
 
 label_timezone = Label(clock, text="", font=('Arial', 14, 'italic'), bg='Wheat', fg='black')
@@ -286,10 +337,10 @@ world_time_label = Label(clock, text="", font=('Arial', 12), bg='Wheat', fg='dar
 world_time_label.place(x=20, y=558)
 
 quote_label = Label(clock, font=('Arial', 14, 'italic'), bg='Wheat', fg='darkblue')
-quote_label.place(x=400, y=550)
+quote_label.place(x=300, y=570)
 
 weather_label = Label(clock, text="", font=('Arial', 12), bg='Wheat', fg='blue')
-weather_label.place(x=700, y=580)
+weather_label.place(x=800, y=540)
 
 
 
@@ -302,12 +353,8 @@ exit_btn = Button(clock, text="Exit", command=clock.quit, font=('Arial', 14), bg
 exit_btn.place(x=870, y=480, width=100, height=40)
 
 
-
-
-
 #  Stopwatch 
 
-# === Stopwatch ===
 
 stopwatch_label = Label(clock, text="00:00:00", font=('Arial', 20, 'bold'), bg='Wheat', fg='blue')
 stopwatch_label.place(x=20, y=480)  # Moved up
@@ -316,14 +363,57 @@ Button(clock, text="Start", command=start_stopwatch, font=('Arial', 12), bg='Gre
 Button(clock, text="Stop", command=stop_stopwatch, font=('Arial', 12), bg='Orange', fg='white').place(x=210, y=480)
 Button(clock, text="Reset", command=reset_stopwatch, font=('Arial', 12), bg='Gray', fg='white').place(x=270, y=480)
 
-
-
+# Button(clock, text="Countdown", command=countdown_timer).place(x=650, y=520)
+# Button(clock, text="Speak Time", command=announce_time).place(x=750, y=520)
 
 Button(clock, text="Set Alarm", command=set_alarm, font=('Arial', 12), bg='brown', fg='white').place(x=340, y=480)
-Button(clock, text="Calendar", command=show_calendar, font=('Arial', 12), bg='purple', fg='white').place(x=440, y=480)
+# Button(clock, text="Calendar", command=show_calendar, font=('Arial', 12), bg='purple', fg='white').place(x=440, y=480)
 Button(clock, text="Toggle Theme", command=toggle_theme, font=('Arial', 12), bg='black', fg='white').place(x=550, y=480)
 
 
+# speaker_img = PhotoImage(file="C:/Users/Dell/OneDrive/Desktop/sonal/project/ChatGPT Image Apr 12, 2025, 12_09_59 PM.png")  # <-- your speaker image path
+speaker_button = Button(clock, text="🔊", command=announce_time, bg='Wheat', bd=0 ,font=("Arial",18))
+speaker_button.place(x=950, y=50, width=32, height=32)
+
+countdown_icon_btn = Button(clock, text="⏳", command=countdown_timer, font=("Arial", 18), bg='Wheat', bd=0)
+countdown_icon_btn.place(x=950, y=90, width=32, height=32)
+
+# Calendar Icon Button
+# calendar_img = PhotoImage(file="C:/Users/Dell/OneDrive/Desktop/sonal/project/calendar_icon.png.png")
+calendar_button = Button(clock, text="📅", command=show_calendar, font=("Arial", 18), bg='Wheat', bd=0)
+calendar_button.place(x=950, y=10, width=32, height=32)  
+
+
+
+# notes_list = Listbox(clock, height=6)
+# notes_list.place(x=20, y=500, width=250)
+
+# Top-left Notes section (adjusted size and position)
+notes_text = Text(clock, height=7, width=10)
+notes_text.place(x=10, y=35)  # Top-left corner
+
+add_note_button = Button(clock, text="Add Note", command=add_note)
+add_note_button.place(x=10, y=160)
+remove_note_button = Button(clock, text="Remove", command=remove_note)
+remove_note_button.place(x=10, y=190)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#function call 
 get_weather()
 update_quote()
 date_time()
