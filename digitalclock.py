@@ -1,11 +1,55 @@
 from tkinter import *
 from tkinter import messagebox
 import datetime
+import time
+import threading
+import random
+import calendar
+import pytz
+import requests
 
 
 is_24_hour = False
 stopwatch_running = False
 stopwatch_counter = 0
+is_dark = False
+alarm_thread = None
+
+# === Quote List ===
+quotes = [
+    "Stay positive, work hard, make it happen.",
+    "Discipline is the bridge between goals and accomplishment.",
+    "Success is no accident.",
+    "Push yourself, because no one else is going to do it for you.",
+    "Great things never come from comfort zones."
+]
+
+# === Weather ===
+# import requests 
+
+def get_weather():
+    try:
+        api_key = "bd6f1dd81d2f2eb8414a656ec18c6ef5"  # You can generate a new one if needed
+        city = "Delhi"
+        url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
+        
+        response = requests.get(url)
+        res = response.json()
+        
+        print("API Response:", res)  # See the exact data received
+        
+        if response.status_code != 200:
+            raise Exception(res.get("message", "API error"))
+        
+        temp = res['main']['temp']
+        condition = res['weather'][0]['description'].capitalize()
+        
+        weather_label.config(text=f"{city}: {temp}°C, {condition}")
+    
+    except Exception as e:
+        print("Weather fetch error:", e)
+        weather_label.config(text="Weather: Unable to fetch")
+
 
 
 # print(datetime.datetime.now())
@@ -46,6 +90,10 @@ def date_time():
     label_greeting.config(text=get_greeting())
     label_timezone.config(text="Indian Standard Time (IST)")
 
+
+
+    world_time_label.config(text=f"Tokyo: {get_world_time('Asia/Tokyo')} | New York: {get_world_time('America/New_York')}")
+
     lab_hr.after(200,date_time)
 
 
@@ -74,6 +122,51 @@ def update_stopwatch():
         secs = stopwatch_counter % 60
         stopwatch_label.config(text=f"{hrs:02}:{mins:02}:{secs:02}")
         stopwatch_label.after(1000, update_stopwatch)
+
+
+# === Alarm ===
+def set_alarm():
+    alarm_time = simpledialog.askstring("Set Alarm", "Enter time in HH:MM format:") # type: ignore
+    if alarm_time:
+        threading.Thread(target=check_alarm, args=(alarm_time,), daemon=True).start()
+
+def check_alarm(alarm_time):
+    while True:
+        now = datetime.datetime.now().strftime('%H:%M')
+        if now == alarm_time:
+            messagebox.showinfo("Alarm", "⏰ Time's up!")
+            break
+        time.sleep(1)
+
+# === World Clock ===
+def get_world_time(city):
+    tz = pytz.timezone(city)
+    return datetime.datetime.now(tz).strftime('%H:%M:%S')
+
+# === Quotes ===
+def update_quote():
+    quote_label.config(text=random.choice(quotes))
+    clock.after(10000, update_quote)
+
+# === Calendar ===
+def show_calendar():
+    now = datetime.datetime.now()
+    cal_text = calendar.month(now.year, now.month)
+    messagebox.showinfo("📅 Calendar", cal_text)
+
+# === Theme Toggle ===
+def toggle_theme():
+    global is_dark
+    bg = 'black' if not is_dark else 'Wheat'
+    fg = 'white' if not is_dark else 'black'
+    clock.config(bg=bg)
+    for widget in clock.winfo_children():
+        try:
+            widget.config(bg=bg, fg=fg)
+        except:
+            pass
+    is_dark = not is_dark
+
 
 
 
@@ -183,8 +276,20 @@ lab_day_txt=Label(clock,text="Day",font=('Times New Roman',20,"bold"),
 lab_day_txt.place(x=780,y=410,height=40,width=100)
 
 
+
+#labels
+
 label_timezone = Label(clock, text="", font=('Arial', 14, 'italic'), bg='Wheat', fg='black')
-label_timezone.place(x=20, y=540)
+label_timezone.place(x=20, y=520)
+
+world_time_label = Label(clock, text="", font=('Arial', 12), bg='Wheat', fg='darkblue')
+world_time_label.place(x=20, y=558)
+
+quote_label = Label(clock, font=('Arial', 14, 'italic'), bg='Wheat', fg='darkblue')
+quote_label.place(x=400, y=550)
+
+weather_label = Label(clock, text="", font=('Arial', 12), bg='Wheat', fg='blue')
+weather_label.place(x=700, y=580)
 
 
 
@@ -199,7 +304,11 @@ exit_btn.place(x=870, y=480, width=100, height=40)
 
 
 
+
 #  Stopwatch 
+
+# === Stopwatch ===
+
 stopwatch_label = Label(clock, text="00:00:00", font=('Arial', 20, 'bold'), bg='Wheat', fg='blue')
 stopwatch_label.place(x=20, y=480)  # Moved up
 
@@ -208,6 +317,15 @@ Button(clock, text="Stop", command=stop_stopwatch, font=('Arial', 12), bg='Orang
 Button(clock, text="Reset", command=reset_stopwatch, font=('Arial', 12), bg='Gray', fg='white').place(x=270, y=480)
 
 
+
+
+Button(clock, text="Set Alarm", command=set_alarm, font=('Arial', 12), bg='brown', fg='white').place(x=340, y=480)
+Button(clock, text="Calendar", command=show_calendar, font=('Arial', 12), bg='purple', fg='white').place(x=440, y=480)
+Button(clock, text="Toggle Theme", command=toggle_theme, font=('Arial', 12), bg='black', fg='white').place(x=550, y=480)
+
+
+get_weather()
+update_quote()
 date_time()
 clock.mainloop()
 

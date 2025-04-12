@@ -1,47 +1,67 @@
+# Enhanced Digital Clock App - All features in one
+
 from tkinter import *
-from tkinter import messagebox
-from tkinter import ttk
+from tkinter import messagebox, simpledialog
 import datetime
-import time as tm
+import time
 import threading
 import random
+import calendar
+import pytz
+import requests
 
-# === Global Variables ===
+# === Settings and Globals ===
 is_24_hour = False
-dark_theme = False
 stopwatch_running = False
 stopwatch_counter = 0
+is_dark = False
+alarm_thread = None
 
-# === Greetings ===
+# === Quote List ===
 quotes = [
+    "Stay positive, work hard, make it happen.",
+    "Discipline is the bridge between goals and accomplishment.",
+    "Success is no accident.",
     "Push yourself, because no one else is going to do it for you.",
-    "Success doesn’t just find you. You have to go out and get it.",
-    "Dream it. Wish it. Do it.",
-    "Don’t stop when you’re tired. Stop when you’re done.",
-    "Little things make big days."
+    "Great things never come from comfort zones."
 ]
 
-# === Functions ===
+# === Weather ===
+def get_weather():
+    try:
+        api_key = "YOUR_OPENWEATHERMAP_API_KEY"
+        city = "Delhi"
+        url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
+        res = requests.get(url).json()
+        temp = res['main']['temp']
+        condition = res['weather'][0]['description'].capitalize()
+        weather_label.config(text=f"{city}: {temp}°C, {condition}")
+    except:
+        weather_label.config(text="Weather: Unable to fetch")
+
+# === Clock Update ===
 def toggle_format():
     global is_24_hour
     is_24_hour = not is_24_hour
 
-def toggle_theme():
-    global dark_theme
-    dark_theme = not dark_theme
-    apply_theme()
+def date_time():
+    time_now = datetime.datetime.now()
+    hr = time_now.strftime('%H') if is_24_hour else time_now.strftime('%I')
+    am = '' if is_24_hour else time_now.strftime('%p')
+    lab_hr.config(text=hr)
+    lab_min.config(text=time_now.strftime('%M'))
+    lab_sec.config(text=time_now.strftime('%S'))
+    lab_am.config(text=am)
+    lab_date.config(text=time_now.strftime('%d'))
+    lab_mon.config(text=time_now.strftime('%m'))
+    lab_year.config(text=time_now.strftime('%Y'))
+    lab_day.config(text=time_now.strftime('%a'))
+    label_greeting.config(text=get_greeting())
+    label_timezone.config(text="Indian Standard Time (IST)")
+    world_time_label.config(text=f"Tokyo: {get_world_time('Asia/Tokyo')} | New York: {get_world_time('America/New_York')}")
+    lab_hr.after(200, date_time)
 
-def apply_theme():
-    bg_color = "black" if dark_theme else "Wheat"
-    fg_color = "white" if dark_theme else "black"
-    clock.config(bg=bg_color)
-    label_greeting.config(bg=bg_color, fg='green')
-    label_timezone.config(bg=bg_color, fg=fg_color)
-    quote_label.config(bg=bg_color, fg='purple')
-    for widget in clock.winfo_children():
-        if isinstance(widget, Label) and "clock" not in str(widget):
-            widget.config(bg=bg_color, fg=fg_color)
-
+# === Greeting ===
 def get_greeting():
     hour = int(datetime.datetime.now().strftime('%H'))
     if hour < 12:
@@ -50,34 +70,6 @@ def get_greeting():
         return "Good Afternoon 🌞"
     else:
         return "Good Evening 🌙"
-
-def update_quote():
-    quote_label.config(text=random.choice(quotes))
-    quote_label.after(10000, update_quote)
-
-def update_time():
-    time_now = datetime.datetime.now()
-    hr = time_now.strftime('%H' if is_24_hour else '%I')
-    am_pm = '' if is_24_hour else time_now.strftime('%p')
-    min = time_now.strftime('%M')
-    sec = time_now.strftime('%S')
-    date = time_now.strftime("%d")
-    month = time_now.strftime("%m")
-    year = time_now.strftime("%Y")
-    day = time_now.strftime("%A")
-
-    lab_hr.config(text=hr)
-    lab_min.config(text=min)
-    lab_sec.config(text=sec)
-    lab_am.config(text=am_pm)
-    lab_date.config(text=date)
-    lab_mon.config(text=month)
-    lab_year.config(text=year)
-    lab_day.config(text=day)
-    label_greeting.config(text=get_greeting())
-    label_timezone.config(text="Indian Standard Time (IST)")
-    world_clock.config(text="UTC Time: " + datetime.datetime.utcnow().strftime('%H:%M:%S'))
-    lab_hr.after(1000, update_time)
 
 # === Stopwatch ===
 def start_stopwatch():
@@ -106,7 +98,7 @@ def update_stopwatch():
 
 # === Alarm ===
 def set_alarm():
-    alarm_time = alarm_entry.get()
+    alarm_time = simpledialog.askstring("Set Alarm", "Enter time in HH:MM format:")
     if alarm_time:
         threading.Thread(target=check_alarm, args=(alarm_time,), daemon=True).start()
 
@@ -114,84 +106,93 @@ def check_alarm(alarm_time):
     while True:
         now = datetime.datetime.now().strftime('%H:%M')
         if now == alarm_time:
-            messagebox.showinfo("Alarm", f"⏰ It's {alarm_time} now!")
+            messagebox.showinfo("Alarm", "⏰ Time's up!")
             break
-        tm.sleep(30)
+        time.sleep(1)
+
+# === World Clock ===
+def get_world_time(city):
+    tz = pytz.timezone(city)
+    return datetime.datetime.now(tz).strftime('%H:%M:%S')
+
+# === Quotes ===
+def update_quote():
+    quote_label.config(text=random.choice(quotes))
+    clock.after(10000, update_quote)
+
+# === Calendar ===
+def show_calendar():
+    now = datetime.datetime.now()
+    cal_text = calendar.month(now.year, now.month)
+    messagebox.showinfo("📅 Calendar", cal_text)
+
+# === Theme Toggle ===
+def toggle_theme():
+    global is_dark
+    bg = 'black' if not is_dark else 'Wheat'
+    fg = 'white' if not is_dark else 'black'
+    clock.config(bg=bg)
+    for widget in clock.winfo_children():
+        try:
+            widget.config(bg=bg, fg=fg)
+        except:
+            pass
+    is_dark = not is_dark
 
 # === GUI Setup ===
 clock = Tk()
-clock.title("Advanced Digital Clock")
-clock.geometry("1050x650")
-clock.resizable(False, False)
-clock.config(bg="Wheat")
+clock.title('🌟 Enhanced Digital Clock')
+clock.geometry('1000x650')
+clock.config(bg='Wheat')
 
-# === Greeting ===
+# Greeting
 label_greeting = Label(clock, font=('Helvetica', 25, 'bold'), bg='Wheat', fg='green')
 label_greeting.pack()
 
-# === Main Time Labels ===
-lab_hr = Label(clock, text="00", font=('Times New Roman', 60, "bold"), bg='black', fg="white")
-lab_hr.place(x=120, y=50, height=110, width=100)
-Label(clock, text="Hour", font=('Times New Roman', 20, "bold"), bg='black', fg="white").place(x=120, y=170)
+# Time Labels
+def create_time_label(text, x, y, font_size=60):
+    label = Label(clock, text="00", font=('Times New Roman', font_size, "bold"), bg='black', fg="white")
+    label.place(x=x, y=y, height=110, width=100)
+    Label(clock, text=text, font=('Times New Roman', 20, "bold"), bg='black', fg="white").place(x=x, y=y+140, height=40, width=100)
+    return label
 
-lab_min = Label(clock, text="00", font=('Times New Roman', 60, "bold"), bg='black', fg="white")
-lab_min.place(x=340, y=50, height=110, width=100)
-Label(clock, text="Min.", font=('Times New Roman', 20, "bold"), bg='black', fg="white").place(x=340, y=170)
+lab_hr = create_time_label("Hour", 120, 50)
+lab_min = create_time_label("Min.", 340, 50)
+lab_sec = create_time_label("Sec.", 560, 50)
+lab_am = create_time_label("AM/PM", 780, 50, font_size=40)
+lab_date = create_time_label("Date", 120, 270)
+lab_mon = create_time_label("Month", 340, 270)
+lab_year = create_time_label("Year", 560, 270, font_size=45)
+lab_day = create_time_label("Day", 780, 270, font_size=50)
 
-lab_sec = Label(clock, text="00", font=('Times New Roman', 60, "bold"), bg='black', fg="white")
-lab_sec.place(x=560, y=50, height=110, width=100)
-Label(clock, text="Sec.", font=('Times New Roman', 20, "bold"), bg='black', fg="white").place(x=560, y=170)
+# Labels
+label_timezone = Label(clock, text="", font=('Arial', 14, 'italic'), bg='Wheat', fg='black')
+label_timezone.place(x=20, y=580)
 
-lab_am = Label(clock, text="AM", font=('Times New Roman', 40, "bold"), bg='black', fg="white")
-lab_am.place(x=780, y=50, height=110, width=100)
-Label(clock, text="AM/PM", font=('Times New Roman', 20, "bold"), bg='black', fg="white").place(x=780, y=170)
+world_time_label = Label(clock, text="", font=('Arial', 12), bg='Wheat', fg='darkblue')
+world_time_label.place(x=20, y=610)
 
-# === Date ===
-lab_date = Label(clock, text="00", font=('Times New Roman', 60, "bold"), bg='black', fg="white")
-lab_date.place(x=120, y=270, height=110, width=100)
-Label(clock, text="Date", font=('Times New Roman', 20, "bold"), bg='black', fg="white").place(x=120, y=390)
+quote_label = Label(clock, font=('Arial', 14, 'italic'), bg='Wheat', fg='darkblue')
+quote_label.place(x=300, y=610)
 
-lab_mon = Label(clock, text="00", font=('Times New Roman', 60, "bold"), bg='black', fg="white")
-lab_mon.place(x=340, y=270, height=110, width=100)
-Label(clock, text="Month", font=('Times New Roman', 20, "bold"), bg='black', fg="white").place(x=340, y=390)
+weather_label = Label(clock, text="", font=('Arial', 12), bg='Wheat', fg='blue')
+weather_label.place(x=700, y=580)
 
-lab_year = Label(clock, text="0000", font=('Times New Roman', 45, "bold"), bg='black', fg="white")
-lab_year.place(x=560, y=270, height=110, width=120)
-Label(clock, text="Year", font=('Times New Roman', 20, "bold"), bg='black', fg="white").place(x=560, y=390)
-
-lab_day = Label(clock, text="Day", font=('Times New Roman', 50, "bold"), bg='black', fg="white")
-lab_day.place(x=780, y=270, height=110, width=120)
-Label(clock, text="Day", font=('Times New Roman', 20, "bold"), bg='black', fg="white").place(x=780, y=390)
-
-# === Extra Info ===
-label_timezone = Label(clock, text="Indian Standard Time (IST)", font=('Arial', 14, 'italic'), bg='Wheat', fg='black')
-label_timezone.place(x=20, y=600)
-
-world_clock = Label(clock, text="", font=('Arial', 14, 'italic'), bg='Wheat', fg='black')
-world_clock.place(x=350, y=600)
-
-quote_label = Label(clock, text="", font=('Courier', 14, 'italic'), bg='Wheat', fg='purple')
-quote_label.place(x=20, y=570)
-
-# === Buttons ===
-Button(clock, text="Toggle 12/24", command=toggle_format, font=('Arial', 12), bg='Blue', fg='white').place(x=720, y=570)
-Button(clock, text="Theme", command=toggle_theme, font=('Arial', 12), bg='Gray', fg='white').place(x=860, y=570)
-Button(clock, text="Exit", command=clock.quit, font=('Arial', 12), bg='Red', fg='white').place(x=960, y=570)
-
-# === Stopwatch ===
+# Buttons
+Button(clock, text="12/24 Hour", command=toggle_format, font=('Arial', 14), bg='blue', fg='white').place(x=720, y=480, width=130, height=40)
+Button(clock, text="Exit", command=clock.quit, font=('Arial', 14), bg='red', fg='white').place(x=870, y=480, width=100, height=40)
+Button(clock, text="Start", command=start_stopwatch, font=('Arial', 12), bg='green', fg='white').place(x=150, y=480)
+Button(clock, text="Stop", command=stop_stopwatch, font=('Arial', 12), bg='orange', fg='white').place(x=210, y=480)
+Button(clock, text="Reset", command=reset_stopwatch, font=('Arial', 12), bg='gray', fg='white').place(x=270, y=480)
 stopwatch_label = Label(clock, text="00:00:00", font=('Arial', 20, 'bold'), bg='Wheat', fg='blue')
-stopwatch_label.place(x=50, y=460)
-Button(clock, text="Start", command=start_stopwatch, font=('Arial', 10), bg='Green', fg='white').place(x=200, y=460)
-Button(clock, text="Stop", command=stop_stopwatch, font=('Arial', 10), bg='Orange', fg='white').place(x=260, y=460)
-Button(clock, text="Reset", command=reset_stopwatch, font=('Arial', 10), bg='Gray', fg='white').place(x=320, y=460)
+stopwatch_label.place(x=20, y=480)
 
-# === Alarm Section ===
-alarm_entry = Entry(clock, font=('Arial', 14), width=10)
-alarm_entry.place(x=600, y=460)
-alarm_entry.insert(0, "HH:MM")
-Button(clock, text="Set Alarm", command=set_alarm, font=('Arial', 12), bg='purple', fg='white').place(x=720, y=460)
+Button(clock, text="Set Alarm", command=set_alarm, font=('Arial', 12), bg='brown', fg='white').place(x=340, y=480)
+Button(clock, text="Calendar", command=show_calendar, font=('Arial', 12), bg='purple', fg='white').place(x=440, y=480)
+Button(clock, text="Toggle Theme", command=toggle_theme, font=('Arial', 12), bg='black', fg='white').place(x=550, y=480)
 
-# === Start Clock ===
-update_time()
+# Start Functions
 update_quote()
+get_weather()
+date_time()
 clock.mainloop()
