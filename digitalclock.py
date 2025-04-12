@@ -342,8 +342,6 @@ quote_label.place(x=300, y=570)
 weather_label = Label(clock, text="", font=('Arial', 12), bg='Wheat', fg='blue')
 weather_label.place(x=800, y=540)
 
-
-
 toggle_btn = Button(clock, text="12/24 Hour", command=toggle_format, font=('Arial', 14), bg='Blue', fg='white')
 toggle_btn.place(x=720, y=480, width=130, height=40)
 
@@ -352,9 +350,7 @@ toggle_btn.place(x=720, y=480, width=130, height=40)
 exit_btn = Button(clock, text="Exit", command=clock.quit, font=('Arial', 14), bg='red', fg='white')
 exit_btn.place(x=870, y=480, width=100, height=40)
 
-
 #  Stopwatch 
-
 
 stopwatch_label = Label(clock, text="00:00:00", font=('Arial', 20, 'bold'), bg='Wheat', fg='blue')
 stopwatch_label.place(x=20, y=480)  # Moved up
@@ -363,13 +359,9 @@ Button(clock, text="Start", command=start_stopwatch, font=('Arial', 12), bg='Gre
 Button(clock, text="Stop", command=stop_stopwatch, font=('Arial', 12), bg='Orange', fg='white').place(x=210, y=480)
 Button(clock, text="Reset", command=reset_stopwatch, font=('Arial', 12), bg='Gray', fg='white').place(x=270, y=480)
 
-# Button(clock, text="Countdown", command=countdown_timer).place(x=650, y=520)
-# Button(clock, text="Speak Time", command=announce_time).place(x=750, y=520)
-
 Button(clock, text="Set Alarm", command=set_alarm, font=('Arial', 12), bg='brown', fg='white').place(x=340, y=480)
 # Button(clock, text="Calendar", command=show_calendar, font=('Arial', 12), bg='purple', fg='white').place(x=440, y=480)
 Button(clock, text="Toggle Theme", command=toggle_theme, font=('Arial', 12), bg='black', fg='white').place(x=550, y=480)
-
 
 # speaker_img = PhotoImage(file="C:/Users/Dell/OneDrive/Desktop/sonal/project/ChatGPT Image Apr 12, 2025, 12_09_59 PM.png")  # <-- your speaker image path
 speaker_button = Button(clock, text="🔊", command=announce_time, bg='Wheat', bd=0 ,font=("Arial",18))
@@ -384,10 +376,6 @@ calendar_button = Button(clock, text="📅", command=show_calendar, font=("Arial
 calendar_button.place(x=950, y=10, width=32, height=32)  
 
 
-
-# notes_list = Listbox(clock, height=6)
-# notes_list.place(x=20, y=500, width=250)
-
 # Top-left Notes section (adjusted size and position)
 notes_text = Text(clock, height=7, width=10)
 notes_text.place(x=10, y=35)  # Top-left corner
@@ -396,21 +384,6 @@ add_note_button = Button(clock, text="Add Note", command=add_note)
 add_note_button.place(x=10, y=160)
 remove_note_button = Button(clock, text="Remove", command=remove_note)
 remove_note_button.place(x=10, y=190)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #function call 
