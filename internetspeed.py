@@ -9,7 +9,6 @@ def speedcheck():
     lab_down.config(text=down)
     lab_up.config(text=up)
 
-
 sp =Tk()
 sp.title("speed test")
 sp.geometry("500x650")
