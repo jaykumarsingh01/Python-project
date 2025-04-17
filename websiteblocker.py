@@ -34,3 +34,18 @@ while True:
 
              host_file.truncate()        
          time.sleep(3)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                       # Jay Kumar Singh
