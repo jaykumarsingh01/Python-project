@@ -1,8 +1,9 @@
 from tkinter import *
 import os
+
+
 def Restart():
     os.system("shutdown /r /t 1")
-
 
 def Restart_time():
      os.system("shutdown /r /t 20")
@@ -21,16 +22,16 @@ st.config(bg="DeepSkyBlue")
 
 
 
-r_buttom  = Button(st,text="Restart",font= ("time new roman",20,"bold"),relief=RAISED,cursor="plus")
+r_buttom  = Button(st,text="Restart",font= ("time new roman",20,"bold"),relief=RAISED,cursor="plus",command=Restart)
 r_buttom.place(x=150,y=60,height=50,width=200)
 
-rt_buttom  = Button(st,text="Restart time",font= ("time new roman",20,"bold"),relief=RAISED,cursor="plus")
+rt_buttom  = Button(st,text="Restart time",font= ("time new roman",20,"bold"),relief=RAISED,cursor="plus",command= Restart_time)
 rt_buttom.place(x=150,y=170,height=50,width=200)
 
-lg_buttom  = Button(st,text="Log-Out",font= ("time new roman",20,"bold"),relief=RAISED,cursor="plus")
+lg_buttom  = Button(st,text="Log-Out",font= ("time new roman",20,"bold"),relief=RAISED,cursor="plus",command= logout)
 lg_buttom.place(x=150,y=270,height=50,width=200)
 
-st_buttom  = Button(st,text="Shutdown",font= ("time new roman",20,"bold"),relief=RAISED,cursor="plus")
+st_buttom  = Button(st,text="Shutdown",font= ("time new roman",20,"bold"),relief=RAISED,cursor="plus",command=shutdown)
 st_buttom.place(x=150,y=370,height=50,width=200)
 
 
