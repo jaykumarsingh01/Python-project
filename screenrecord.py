@@ -30,4 +30,11 @@ while True:
 
 
     output.write(frame)
-    
+
+
+    c_time=time.time()
+    if c_time > end_time:
+        break
+
+output.realese()
+print("----END----")
