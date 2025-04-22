@@ -1,3 +1,5 @@
+# this is face recognition using python 
+
 import cv2
 
 face_cap= cv2.CascadeClassifier("")
