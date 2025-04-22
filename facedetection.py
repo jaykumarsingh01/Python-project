@@ -23,3 +23,22 @@ while True:
     if cv2.waitKey(10) == ord("a"):
          break
 video_cap.realese
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                             #  Jay Kumar Singh
