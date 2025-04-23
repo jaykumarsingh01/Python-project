@@ -1,0 +1,5 @@
+import pyautogui
+
+
+ss=pyautogui.screenshot()
+ss.save("test1.png")
