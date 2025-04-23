@@ -1,3 +1,5 @@
+# Take screen shot
+
 import pyautogui
 from tkinter import *
 def take_ss():
@@ -39,4 +41,4 @@ win.mainloop()
 
 
 
-
+                                                                    #Jay Kumar Singh
