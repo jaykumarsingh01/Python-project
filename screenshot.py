@@ -19,47 +19,8 @@ entry=Entry(win,font=('times new roman',30))
 entry.place(x=10,height=70,width=660,y=50)
 
 
-
-
-
-
-
-
-
 button=Button(win,text="Done",font=('times new roman',50),command=take_ss)
 button.place(x=250,y=140,height=100,width=200)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 win.mainloop()
