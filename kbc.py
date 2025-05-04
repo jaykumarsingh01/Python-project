@@ -1,3 +1,6 @@
+# this is kbc game 
+
+
 questions = [
           
            [
